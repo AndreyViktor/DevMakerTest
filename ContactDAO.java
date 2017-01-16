@@ -19,7 +19,7 @@ public class ContactDAO extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = "create table contacts (id integer primary key, name text, telephone text, email text";
+        String sql = "create table contacts (id integer primary key, name text, telephone text, email text)";
         sqLiteDatabase.execSQL(sql);
     }
 
