@@ -51,9 +51,9 @@ public class ContactDAO extends SQLiteOpenHelper{
      }
 
     public void updateContacts(List<Contact> contacts) {
-        //String sql = "remove * from contacts";
+        String sql = "delete from contacts";
         SQLiteDatabase db = getWritableDatabase();
-        //db.execSQL(sql);
+        db.execSQL(sql);
         for(int i=0; i<contacts.size();i++) {
             Contact contact = contacts.get(i);
          //  Toast.makeText(context,contact.getName(),Toast.LENGTH_SHORT).show();

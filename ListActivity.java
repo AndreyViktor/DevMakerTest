@@ -1,9 +1,12 @@
 package br.com.andrey.devmakertest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -24,6 +27,17 @@ public class ListActivity extends AppCompatActivity {
         ArrayAdapter<Contact> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, contacts);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Contact contact = (Contact) listView.getItemAtPosition(position);
+
+                Intent goToDetails = new Intent(ListActivity.this, DetailsActivity.class);
+                goToDetails.putExtra("contact",contact);
+                startActivity(goToDetails);
+            }
+        });
     }
 
     @Override

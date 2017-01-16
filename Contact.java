@@ -1,9 +1,11 @@
 package br.com.andrey.devmakertest;
 
+import java.io.Serializable;
+
 /**
  * Created by andrey on 26/12/2016.
  */
-public class Contact {
+public class Contact implements Serializable {
     private long id;
     private String name;
     private String email;
