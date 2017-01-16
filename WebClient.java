@@ -28,9 +28,6 @@ public class WebClient{
 
                 connection.connect();
 
-               // Scanner scanner = new Scanner(connection.getInputStream());
-
-
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
                     InputStream in = new BufferedInputStream(connection.getInputStream());
@@ -41,9 +38,9 @@ public class WebClient{
                         result.append(line);
                     }
                 }
+                connection.disconnect();
 
-
-                return String.valueOf(result);      //scanner.next();
+                return String.valueOf(result);
             } catch (IOException e) {
                 e.printStackTrace();
             }

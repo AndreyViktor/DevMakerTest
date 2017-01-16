@@ -2,6 +2,8 @@ package br.com.andrey.devmakertest;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -15,22 +17,25 @@ import java.util.List;
  * Created by andrey on 28/12/2016.
  */
 
-public class UpdateListTask extends AsyncTask<Object, Object, List<Contact>> {
-    public UpdateListTask(Context context) {
-        this.context = context;
-    }
+public class UpdateListTask extends AsyncTask<Object, Object, Object> {
 
     private Context context;
+    private final ListView listView;
+
+    public UpdateListTask(Context context, ListView listView) {
+        this.context = context;
+        this.listView = listView;
+    }
 
     @Override
-    protected List<Contact> doInBackground(Object[] objects) {
+    protected Object doInBackground(Object[] objects) {
         try {
             WebClient client = new WebClient();
             String jsonString = client.get();
 
             JSONObject jo = new JSONObject(jsonString);
             JSONArray arrayContacts = jo.getJSONArray("contacts");
-            List<Contact> contacts = new ArrayList<Contact>();
+            List<Contact> contacts = new ArrayList<>();
 
             for (int i=0;i<arrayContacts.length(); i++) {
                 Contact contact = new Contact();
@@ -41,7 +46,11 @@ public class UpdateListTask extends AsyncTask<Object, Object, List<Contact>> {
 
                 contacts.add(contact);
             }
-            return  contacts;
+            ContactDAO dao = new ContactDAO(context);
+            dao.updateContacts(contacts);
+            dao.close();
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -49,8 +58,14 @@ public class UpdateListTask extends AsyncTask<Object, Object, List<Contact>> {
     }
 
     @Override
-    protected void onPostExecute(List<Contact> contacts) {
-        Contact contact=contacts.get(0); //test
-        Toast.makeText(context,contact.getId()+contact.getName()+contact.getEmail()+contact.getTelephone(),Toast.LENGTH_SHORT).show();
+    protected void onPostExecute(Object o) {
+        ContactDAO dao = new ContactDAO(context);
+        List<Contact> contacts = dao.getContacts();
+        dao.close();
+
+        ArrayAdapter<Contact> adapter =
+                new ArrayAdapter<>(context, android.R.layout.simple_expandable_list_item_1, contacts);
+        listView.setAdapter(adapter);
+
     }
 }

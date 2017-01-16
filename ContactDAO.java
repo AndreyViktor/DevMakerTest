@@ -1,9 +1,11 @@
 package br.com.andrey.devmakertest;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +15,11 @@ import java.util.List;
  */
 public class ContactDAO extends SQLiteOpenHelper{
 
+    private final Context context;
+
     public ContactDAO(Context context) {
         super(context, "contacts", null, 1);
+        this.context = context;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class ContactDAO extends SQLiteOpenHelper{
             Contact contact = new Contact();
 
             contact.setId(c.getLong(c.getColumnIndex("id")));
-            contact.setName(c.getString(c.getColumnIndex("nome")));
+            contact.setName(c.getString(c.getColumnIndex("name")));
             contact.setEmail(c.getString(c.getColumnIndex("email")));
             contact.setTelephone(c.getString(c.getColumnIndex("telephone")));
 
@@ -44,4 +49,21 @@ public class ContactDAO extends SQLiteOpenHelper{
         }
         return contacts;
      }
+
+    public void updateContacts(List<Contact> contacts) {
+        //String sql = "remove * from contacts";
+        SQLiteDatabase db = getWritableDatabase();
+        //db.execSQL(sql);
+        for(int i=0; i<contacts.size();i++) {
+            Contact contact = contacts.get(i);
+         //  Toast.makeText(context,contact.getName(),Toast.LENGTH_SHORT).show();
+            ContentValues values = new ContentValues();
+            values.put("id", contact.getId() );
+            values.put("name",contact.getName());
+            values.put("email",contact.getEmail());
+            values.put("telephone",contact.getTelephone());
+
+            db.insert("contacts", null, values );
+        }
+    }
 }

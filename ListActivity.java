@@ -11,28 +11,27 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
+    private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        ListView list = (ListView) findViewById(R.id.listContacts);
-        updateListView(list);
-    }
-
-    private void updateListView(ListView list) {
+        listView = (ListView) findViewById(R.id.listContacts);
         ContactDAO dao = new ContactDAO(this);
         List<Contact> contacts = dao.getContacts();
         dao.close();
         ArrayAdapter<Contact> adapter =
-                new ArrayAdapter<Contact>(this, android.R.layout.simple_expandable_list_item_1, contacts);
-        list.setAdapter(adapter);
+                new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, contacts);
+        listView.setAdapter(adapter);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_update_list:
-                new UpdateListTask(this).execute();
+                new UpdateListTask(this, listView).execute();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -43,5 +42,6 @@ public class ListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_list,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 }
 
